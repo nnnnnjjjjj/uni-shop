@@ -14,6 +14,27 @@
 				<image :src="item.image_src" class="nav-img"></image>
 			</view>
 		</view>
+		
+		<!-- 楼层区域 -->
+		<view class="floor-list">
+			<view class="floor-item" v-for="(item, i) in floorList" :key = "i" @click="navClickHandler(item)">
+				<image :src="item.floor_title.image_src" class="floor-title"></image>
+				<!-- 楼层图片区域 -->
+				<view class="floor-img-box">
+					<navigator class="left-img-box" :url="item.product_list[0].url">
+						<image :src="item.product_list[0].image_src" :style="{width: item.product_list[0].image_width + 'rpx'}" mode="widthFix"></image>
+					</navigator>
+					<!-- 右侧4个小图片的盒子 -->
+					<view class="right-img-box">
+						<navigator class="right-img-item" v-for="(item2, i2) in item.product_list" :key="i2" v-if="i2 !== 0" :url="item2.url">
+							<image :src="item2.image_src" :style="{width: item2.image_width + 'rpx'}" mode="widthFix"></image>
+						</navigator>
+					</view>
+				</view>
+			</view>
+		</view>
+		
+		
 	</view>
 </template>
 
@@ -25,19 +46,21 @@
 				swiperList: [],
 				// 分类导航的数据列表
 				navList: [],
+				// 楼层的数据列表
+				floorList: [],
 			}
 		},
 		
 		onLoad() {
 			this.getSwiperList()
 			this.getNavList()
+			this.getFloorList()
 		},
 		
 		methods: {
 			async getSwiperList() {
 				const {data:res} = await uni.$http.get('/api/public/v1/home/swiperdata')
 				
-				console.log(res)
 				if (res.meta.status !== 200) {
 					return uni.$showMsg()
 				}
@@ -47,8 +70,21 @@
 			async getNavList() {
 				const {data: res} = await uni.$http.get('/api/public/v1/home/catitems')
 				if (res.meta.status !== 200) return uni.$showMsg()
-				console.log(res)
 				this.navList = res.message
+			},
+			
+			async getFloorList() {
+				const {data: res} = await uni.$http.get('/api/public/v1/home/floordata')
+				if (res.meta.status !== 200) return uni.$showMsg()
+				
+				// 对数据进行处理
+				res.message.forEach(floor => {
+					floor.product_list.forEach(prod => {
+						prod.url = '/subpkg/goods_list/goods_list?' + prod.navigator_url.split('?')[1]
+					})
+				})
+				
+				this.floorList = res.message
 			},
 			
 			navClickHandler(item) {
@@ -82,5 +118,20 @@ swiper {
 		width: 128rpx;
 		height: 140rpx;
 	}
+}
+
+.floor-title {
+	width: 100%;
+	height: 60rpx;
+}
+
+.right-img-box {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+.floor-img-box {
+	display: flex;
+	padding-left: 10rpx;
 }
 </style>
