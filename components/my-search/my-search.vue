@@ -1,6 +1,7 @@
 <template>
-	<view class="my-search-container">
-		<view class="my-search-box">
+	<view class="my-search-container" :style="{'background-color': bgcolor}"
+		@click="searchBoxHandler">
+		<view class="my-search-box" :style="{'border-radius': radius + 'px'}">
 			<uni-icons type="search" size="17"></uni-icons>
 			<text class="placeholder">搜索</text>
 		</view>
@@ -14,13 +15,27 @@
 			return {
 				
 			};
+		},
+		props: {
+			bgcolor: {
+				type: String,
+				default: '#C00000'
+			},
+			radius: {
+				type: Number,
+				default: 18
+			}
+		},
+		methods: {
+			searchBoxHandler() {
+				this.$emit('click')
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
 	.my-search-container {
-		background-color: #c00000;
 		height: 50px;
 		padding: 0 10px;
 		display: flex;
@@ -29,7 +44,6 @@
 		.my-search-box {
 			height: 36px;
 			background-color: #ffffff;
-			border-radius: 15px;
 			width: 100%;
 			display: flex;
 			justify-content: center;

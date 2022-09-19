@@ -1,7 +1,8 @@
 <template>
 	<view>
 		<!-- 使用自定义搜索组件 -->
-		<my-search></my-search>
+		<my-search @click="gotoSearch"></my-search>
+		
 		<view class="scroll-view-container">
 			<!-- 左侧滑动区域 -->
 			<scroll-view class="left-scroll-view" scroll-y="true" :style="{height: wh + 'px'}">
@@ -55,7 +56,12 @@
 				
 				// 二级分类列表
 				this.cateLevel2 = res.message[0].children
-				
+			},
+			gotoSearch() {
+				console.log('test')
+				uni.navigateTo({
+					url: '/subpkg/search/search'
+				})
 			},
 			activeChanged(i) {
 				this.active = i
