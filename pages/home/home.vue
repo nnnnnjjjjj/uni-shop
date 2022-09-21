@@ -101,7 +101,6 @@
 			},
 			
 			gotoSearch() {
-				console.log('test')
 				uni.navigateTo({
 					url: '/subpkg/search/search'
 				})
