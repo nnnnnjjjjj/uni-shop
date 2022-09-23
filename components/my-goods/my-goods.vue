@@ -9,7 +9,7 @@
 			<view class="goods-name">{{goods.goods_name}}</view>
 			<view class="goods-info-box">
 				<view class="goods-price">
-					￥{{goods.goods_price}}
+					￥{{goods.goods_price | tofixed}}
 				</view>
 			</view>
 		</view>
@@ -19,6 +19,11 @@
 <script>
 	export default {
 		name:"my-goods",
+		filters: {
+			tofixed(num) {
+				return Number(num).toFixed(2)
+			}
+		},
 		data() {
 			return {
 				

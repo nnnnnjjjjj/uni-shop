@@ -23,8 +23,20 @@
 					pageSize: 10
 				},
 				goodsList: [],
-				total: 0
+				total: 0,
+				isloading: false
 			}
+		},
+		// 触底的事件
+		onReachBottom() {
+			if (this.queryObj.pagenum * this.queryObj.pageSize >= this.total) return uni.$showMsg()
+			
+			if (this.isloading) return 
+			
+			this.queryObj.pagenum += 1
+			this.getGoodsList()
+			
+			
 		},
 		onLoad(options) {
 			this.queryObj.query = options.query || ''
@@ -34,11 +46,12 @@
 		},
 		methods: {
 			async getGoodsList() {
+				this.isloading = true
 				const {data: res} = await uni.$http.get('/api/public/v1/goods/search', this.queryObj)
-				console.log(res)
+				this.isloading = false
 				if (res.meta.status !== 200) return uni.$showMsg()
 				
-				this.goodsList = res.message.goods
+				this.goodsList = [...this.goodsList, ...res.message.goods]
 				this.total = res.message.total 
 			}
 		}
