@@ -1,5 +1,6 @@
 import App from './App'
 
+import store from './store/store.js'
 import { $http } from '@escook/request-miniprogram'
 
 // #ifndef VUE3
@@ -43,7 +44,9 @@ import { createSSRApp } from 'vue'
 export function createApp() {
   const app = createSSRApp(App)
   return {
-    app
+    app,
+	store
   }
 }
+app.$mount()
 // #endif
